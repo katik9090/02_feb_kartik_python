@@ -1,0 +1,36 @@
+{% extends 'productapp/base.html' %}
+
+{% block title %}{{ title }} - Nexus{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="glass-card">
+        <h2 style="margin-top: 0; margin-bottom: 2rem;">{{ title }}</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color: var(--danger); font-size: 0.75rem; margin-top: 0.25rem;">
+                    {{ field.errors|first }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 2; justify-content: center;">
+                    Save Product
+                </button>
+                <a href="{% url 'product_list' %}" class="btn" style="background: rgba(255,255,255,0.05); color: var(--text-muted); flex: 1; justify-content: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

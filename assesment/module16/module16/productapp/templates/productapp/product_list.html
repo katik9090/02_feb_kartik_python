@@ -1,0 +1,52 @@
+{% extends 'productapp/base.html' %}
+
+{% block title %}All Products - Nexus{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="margin-bottom: 2rem; padding: 1rem;">
+    <form method="GET" action="{% url 'product_list' %}" style="display: flex; gap: 0.5rem;">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search products..." class="form-input" style="flex: 1; padding: 0.5rem 1rem;">
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if query %}
+        <a href="{% url 'product_list' %}" class="btn" style="background: rgba(255,255,255,0.05); color: white;">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="grid">
+    {% for product in products %}
+    <div class="glass-card product-card">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+        {% else %}
+        <div class="product-img" style="background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+            No Image
+        </div>
+        {% endif %}
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <h3 style="margin: 0; font-weight: 800;">{{ product.name }}</h3>
+            <span style="color: var(--success); font-weight: 700;">${{ product.price }}</span>
+        </div>
+        
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5; margin-bottom: 1.5rem;">
+            {{ product.description|truncatewords:15 }}
+        </p>
+        
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{% url 'product_update' product.pk %}" class="btn" style="background: rgba(255,255,255,0.1); color: white; flex: 1; justify-content: center;">
+                Edit
+            </a>
+            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger" style="padding: 0.625rem; aspect-ratio: 1; justify-content: center;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+        <p style="color: var(--text-muted); font-size: 1.125rem;">No products found. Start by adding one!</p>
+        <a href="{% url 'product_add' %}" class="btn btn-primary" style="margin-top: 1rem;">Add First Product</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
